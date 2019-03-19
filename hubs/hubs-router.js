@@ -1,8 +1,10 @@
 const express = require("express");
 
+const Hubs = require("./hubs-model");
+
 const router = express.Router();
 
-router.get("/api/hubs", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const hubs = await Hubs.find(req.query);
     res.status(200).json(hubs);
@@ -15,7 +17,7 @@ router.get("/api/hubs", async (req, res) => {
   }
 });
 
-router.get("/api/hubs/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const hub = await Hubs.findById(req.params.id);
 
@@ -33,7 +35,7 @@ router.get("/api/hubs/:id", async (req, res) => {
   }
 });
 
-router.post("/api/hubs", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const hub = await Hubs.add(req.body);
     res.status(201).json(hub);
@@ -46,7 +48,7 @@ router.post("/api/hubs", async (req, res) => {
   }
 });
 
-router.delete("/api/hubs/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const count = await Hubs.remove(req.params.id);
     if (count > 0) {
@@ -63,7 +65,7 @@ router.delete("/api/hubs/:id", async (req, res) => {
   }
 });
 
-router.put("/api/hubs/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const hub = await Hubs.update(req.params.id, req.body);
     if (hub) {
@@ -79,5 +81,18 @@ router.put("/api/hubs/:id", async (req, res) => {
     });
   }
 });
+
+router.get("/:id/messages", async, (req,res) => {
+  try {
+    const messages = await Hubs.findHubMessages(req.params.id);
+    if (messages && messages.length) {
+      res.status(200).json(messages)
+    } else {
+      res.status(404).json({ message: "No messages for this hub" })
+    }
+  } catch (error) {
+    res.status(500).json({ messages: "Error getting the messages for this hub"})
+  }
+})
 
 module.exports = router;

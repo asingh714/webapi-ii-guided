@@ -1,6 +1,6 @@
 const express = require("express");
 
-const Hubs = require("./hubs/hubs-model.js");
+const hubsRouter = require("./hubs/hubs-router.js")
 
 const server = express();
 
@@ -13,6 +13,7 @@ server.get("/", (req, res) => {
   `);
 });
 
+server.use("/api/hubs", hubsRouter);
 
 
 // add an endpoint that returns all the messages for a hub
